@@ -11,11 +11,6 @@ public partial class FlowNode
         InitializeComponent();
     }
 
-    private void CompleteButton_Click(object sender, RoutedEventArgs e)
-    {
-        RaiseEvent(new RoutedEventArgs(NodeCompletedEvent));
-    }
-
     public void StartHighlight()
     {
         HighlightEffect.Visibility = Visibility.Visible;

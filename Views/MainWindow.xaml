@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
+        Style="{StaticResource MaterialDesignWindow}"
         Title="Flow Diagram" Height="450" Width="800">
     <Grid>
         <StackPanel Orientation="Horizontal" x:Name="FlowPanel" VerticalAlignment="Center" HorizontalAlignment="Center">
