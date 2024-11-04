@@ -6,7 +6,7 @@ using FlowDiagram.Controls;
 
 namespace FlowDiagram.Views;
 
-public partial class MainWindow : Window
+public partial class MainWindow
 {
     public MainWindow()
     {
@@ -50,17 +50,15 @@ public partial class MainWindow : Window
 
     private void FlowNode_NodeCompleted(object sender, RoutedEventArgs e)
     {
-        var currentNode = sender as FlowNode;
-        var currentIndex = FlowPanel.Children.IndexOf(currentNode);
-        if (currentNode == null) return;
+        if (sender is not FlowNode currentNode) return;
+        currentNode.MarkAsComplete();
 
+        var currentIndex = FlowPanel.Children.IndexOf(currentNode);
         if (currentIndex < FlowPanel.Children.Count - 1)
         {
-            currentNode.MarkAsComplete();
-
             if (currentIndex < FlowPanel.Children.Count - 2) // connector node's index
             {
-                if (FlowPanel.Children[currentIndex + 1] is Line connector)
+                if (FlowPanel.Children[currentIndex + 1] is Grid grid && grid.Children[0] is Line connector)
                 {
                     connector.Stroke = Brushes.Green;
                     connector.StrokeThickness = 2;
