@@ -39,13 +39,22 @@ public partial class FlowNode
 
     public void StopHighlight()
     {
-        HighlightEffect.Visibility = Visibility.Collapsed;
+        HighlightEffect.Visibility = Visibility.Hidden;
         // Add logic to stop animation.
     }
 
     public void MarkAsComplete()
     {
         NodeBackground.Fill = Brushes.Green;
+        HasCompleted = true;
+        Extra = "completed";
+    }
+
+    public async void Start(Func<CancellationToken, Task<int>> longRunningTaskDelegate)
+    {
+        var tokenSource = new CancellationTokenSource();
+        var ret = await longRunningTaskDelegate(tokenSource.Token); // 调用耗时的任务
+        if (ret == 0) RaiseEvent(new RoutedEventArgs(NodeCompletedEvent));
     }
 
     #region 属性
@@ -60,5 +69,46 @@ public partial class FlowNode
         remove => RemoveHandler(NodeCompletedEvent, value);
     }
 
+    private static readonly DependencyProperty HasCompletedProperty =
+        DependencyProperty.Register(nameof(HasCompleted), typeof(bool), typeof(FlowNode),
+            new PropertyMetadata(false));
+
+    public bool HasCompleted
+    {
+        get => (bool)GetValue(HasCompletedProperty);
+        set => SetValue(HasCompletedProperty, value);
+    }
+
+    private static readonly DependencyProperty NodeNameProperty =
+        DependencyProperty.Register(
+            nameof(NodeName),
+            typeof(string),
+            typeof(FlowNode),
+            new PropertyMetadata(string.Empty));
+
+    public string NodeName
+    {
+        get => (string)GetValue(NodeNameProperty);
+        set => SetValue(NodeNameProperty, value);
+    }
+
+    private static readonly DependencyProperty ExtraProperty =
+        DependencyProperty.Register(
+            nameof(Extra),
+            typeof(string),
+            typeof(FlowNode),
+            new PropertyMetadata(string.Empty));
+
+    public string Extra
+    {
+        get => (string)GetValue(ExtraProperty);
+        set => SetValue(ExtraProperty, value);
+    }
+
     #endregion
+
+    public void UpdateProgress(int countdown)
+    {
+        Extra = $"{countdown} seconds left";
+    }
 }

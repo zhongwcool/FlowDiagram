@@ -9,5 +9,9 @@
         <StackPanel Orientation="Horizontal" x:Name="FlowPanel" VerticalAlignment="Center" HorizontalAlignment="Center">
             <!-- Flow nodes and connectors will be added here programmatically -->
         </StackPanel>
+
+        <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
+            <Button Content="Test" Click="ButtonBase_OnClick" />
+        </WrapPanel>
     </Grid>
 </Window>

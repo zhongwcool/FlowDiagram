@@ -20,7 +20,7 @@ public partial class MainWindow : Window
         {
             var flowNode = new FlowNode
             {
-                DataContext = new { NodeName = $"Step {i}" }
+                NodeName = $"Step {i}"
             };
             flowNode.NodeCompleted += FlowNode_NodeCompleted;
             FlowPanel.Children.Add(flowNode);
@@ -28,8 +28,7 @@ public partial class MainWindow : Window
             if (i >= 5) continue;
             var lineContainer = new Grid
             {
-                VerticalAlignment = VerticalAlignment.Center,
-                Background = Brushes.Gold
+                VerticalAlignment = VerticalAlignment.Center
             };
             var connector = new Line
             {
@@ -39,7 +38,7 @@ public partial class MainWindow : Window
                 Y1 = 0,
                 X2 = 50,
                 Y2 = 0,
-                VerticalAlignment = VerticalAlignment.Top
+                VerticalAlignment = VerticalAlignment.Center
             };
             lineContainer.Children.Add(connector);
             FlowPanel.Children.Add(lineContainer);
@@ -61,15 +60,48 @@ public partial class MainWindow : Window
 
             if (currentIndex < FlowPanel.Children.Count - 2) // connector node's index
             {
-                var connector = FlowPanel.Children[currentIndex + 1] as Line;
-                connector.Stroke = Brushes.Green;
-                connector.StrokeThickness = 2;
+                if (FlowPanel.Children[currentIndex + 1] is Line connector)
+                {
+                    connector.Stroke = Brushes.Green;
+                    connector.StrokeThickness = 2;
+                }
             }
 
-            var nextNode = FlowPanel.Children[currentIndex + 2] as FlowNode;
-            nextNode.StartHighlight();
+            if (FlowPanel.Children[currentIndex + 2] is FlowNode nextNode)
+            {
+                nextNode.StartHighlight();
+                StartNode(nextNode);
+            }
         }
 
         currentNode.StopHighlight();
+    }
+
+    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (FlowPanel.Children[0] is not FlowNode currentFlowNode) return;
+        StartNode(currentFlowNode);
+    }
+
+    private void StartNode(FlowNode node)
+    {
+        node.Start(async token =>
+        {
+            await Task.Run(async () =>
+            {
+                var countdown = 5;
+                while (countdown >= 0)
+                {
+                    // Update UI
+                    Dispatcher.Invoke(() => { node.UpdateProgress(countdown); });
+
+                    // Simulate long running task
+                    await Task.Delay(TimeSpan.FromSeconds(1), token);
+
+                    countdown--;
+                }
+            }, token);
+            return 0;
+        });
     }
 }
