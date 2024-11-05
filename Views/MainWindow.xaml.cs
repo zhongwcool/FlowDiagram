@@ -42,7 +42,8 @@ public partial class MainWindow
             if (i >= 5) continue;
             var lineContainer = new Grid
             {
-                VerticalAlignment = VerticalAlignment.Center
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(-10, 0, -10, 0)
             };
             var connector = new Line
             {
@@ -89,7 +90,7 @@ public partial class MainWindow
         currentNode.StopHighlight();
     }
 
-    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+    private void ButtonTest_OnClick(object sender, RoutedEventArgs e)
     {
         if (FlowPanel.Children[0] is not FlowNode currentFlowNode) return;
         StartNode(currentFlowNode);
@@ -133,5 +134,24 @@ public partial class MainWindow
         }
 
         paletteHelper.SetTheme(theme);
+    }
+
+    private void ButtonReset_OnClick(object sender, RoutedEventArgs e)
+    {
+        foreach (var child in FlowPanel.Children)
+            switch (child)
+            {
+                case FlowNode flowNode:
+                    flowNode.Reset();
+                    flowNode.StopHighlight();
+                    break;
+                case Grid grid when grid.Children[0] is Line connector:
+                    connector.Stroke = Brushes.Gray;
+                    connector.StrokeThickness = 2;
+                    break;
+            }
+
+        // Start highlight effect on the first node
+        if (FlowPanel.Children[0] is FlowNode firstNode) firstNode.StartHighlight();
     }
 }

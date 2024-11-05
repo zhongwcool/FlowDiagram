@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="100" d:DesignWidth="60" Width="60">
+             d:DesignHeight="100" d:DesignWidth="60" Width="80">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -14,7 +14,7 @@
 
         <Grid Grid.Row="0">
             <TextBlock Text=" "
-                       Margin="-10,0,-20,0" />
+                       Margin="0,0,-20,0" />
         </Grid>
 
         <Grid Grid.Row="1">
@@ -37,7 +37,8 @@
 
         <Grid Grid.Row="2">
             <TextBlock Text="{Binding Extra, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                       Margin="-10,0,-20,0" />
+                       HorizontalAlignment="Center"
+                       Margin="0,0,-20,0" />
         </Grid>
 
     </Grid>

@@ -12,7 +12,8 @@
         </StackPanel>
 
         <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
-            <Button Content="Test" Click="ButtonBase_OnClick" />
+            <Button Content="Test" Click="ButtonTest_OnClick" />
+            <Button Content="Reset" Click="ButtonReset_OnClick" Margin="10,0,0,0" />
         </WrapPanel>
     </Grid>
 </Window>

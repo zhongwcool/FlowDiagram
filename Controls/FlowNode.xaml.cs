@@ -35,7 +35,9 @@ public partial class FlowNode
     public void StopHighlight()
     {
         HighlightEffect.Visibility = Visibility.Hidden;
-        // Add logic to stop animation.
+        // stop animation if still running
+        EffectTransform.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+        EffectTransform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
     }
 
     public void MarkAsComplete()
@@ -43,6 +45,14 @@ public partial class FlowNode
         NodeBackground.Fill = Brushes.Green;
         HasCompleted = true;
         Extra = "completed";
+    }
+
+    public void Reset()
+    {
+        HighlightEffect.Visibility = Visibility.Visible;
+        NodeBackground.Fill = Brushes.Gray;
+        HasCompleted = false;
+        Extra = string.Empty;
     }
 
     public async void Start(Func<CancellationToken, Task<int>> longRunningTaskDelegate)
@@ -54,9 +64,12 @@ public partial class FlowNode
 
     #region 属性
 
-    private static readonly RoutedEvent NodeCompletedEvent =
-        EventManager.RegisterRoutedEvent(nameof(NodeCompleted), RoutingStrategy.Bubble, typeof(RoutedEventHandler),
-            typeof(FlowNode));
+    private static readonly RoutedEvent NodeCompletedEvent = EventManager.RegisterRoutedEvent(
+        nameof(NodeCompleted),
+        RoutingStrategy.Bubble,
+        typeof(RoutedEventHandler),
+        typeof(FlowNode)
+    );
 
     public event RoutedEventHandler NodeCompleted
     {
@@ -64,9 +77,12 @@ public partial class FlowNode
         remove => RemoveHandler(NodeCompletedEvent, value);
     }
 
-    private static readonly DependencyProperty HasCompletedProperty =
-        DependencyProperty.Register(nameof(HasCompleted), typeof(bool), typeof(FlowNode),
-            new PropertyMetadata(false));
+    private static readonly DependencyProperty HasCompletedProperty = DependencyProperty.Register(
+        nameof(HasCompleted),
+        typeof(bool),
+        typeof(FlowNode),
+        new PropertyMetadata(false)
+    );
 
     public bool HasCompleted
     {
@@ -74,12 +90,12 @@ public partial class FlowNode
         set => SetValue(HasCompletedProperty, value);
     }
 
-    private static readonly DependencyProperty NodeNameProperty =
-        DependencyProperty.Register(
-            nameof(NodeName),
-            typeof(string),
-            typeof(FlowNode),
-            new PropertyMetadata(string.Empty));
+    private static readonly DependencyProperty NodeNameProperty = DependencyProperty.Register(
+        nameof(NodeName),
+        typeof(string),
+        typeof(FlowNode),
+        new PropertyMetadata(string.Empty)
+    );
 
     public string NodeName
     {
@@ -87,17 +103,32 @@ public partial class FlowNode
         set => SetValue(NodeNameProperty, value);
     }
 
-    private static readonly DependencyProperty ExtraProperty =
-        DependencyProperty.Register(
-            nameof(Extra),
-            typeof(string),
-            typeof(FlowNode),
-            new PropertyMetadata(string.Empty));
+    private static readonly DependencyProperty ExtraProperty = DependencyProperty.Register(
+        nameof(Extra),
+        typeof(string),
+        typeof(FlowNode),
+        new PropertyMetadata(string.Empty)
+    );
 
     public string Extra
     {
         get => (string)GetValue(ExtraProperty);
         set => SetValue(ExtraProperty, value);
+    }
+
+    //定义Background属性
+    public static readonly DependencyProperty CoreFillProperty = DependencyProperty.Register(
+        nameof(CoreFill),
+        typeof(Brush),
+        typeof(FlowNode),
+        new PropertyMetadata(Brushes.Gray)
+    );
+
+    //定义Background属性的包装器
+    public Brush CoreFill
+    {
+        get => (Brush)GetValue(CoreFillProperty);
+        set => SetValue(CoreFillProperty, value);
     }
 
     #endregion
