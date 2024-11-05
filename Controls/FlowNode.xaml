@@ -13,7 +13,8 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <TextBlock Text=" " />
+            <TextBlock Text=" "
+                       Margin="-10,0,-20,0" />
         </Grid>
 
         <Grid Grid.Row="1">
@@ -35,7 +36,8 @@
         </Grid>
 
         <Grid Grid.Row="2">
-            <TextBlock Text="{Binding Extra, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+            <TextBlock Text="{Binding Extra, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Margin="-10,0,-20,0" />
         </Grid>
 
     </Grid>
